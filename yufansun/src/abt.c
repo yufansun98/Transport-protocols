@@ -33,13 +33,13 @@ void A_output(message)
 {
   /*everytime send packet to B we set acknum to 1 so that each time if they check correct they can direct sand back this packet*/
   struct pkt packet;
-  packet.payload = message;
+  strcpy(packet.payload, message.data);
   packet.seqnum = SEQ;
   packet.acknum = ACK;
   int checksum = 0;
   checksum = checksum + ACK + SEQ;
   for (int i = 0; i < 20; i++){
-    checksum = checksum + message[i];
+    checksum = checksum + message.data[i];
   }
   packet.checksum = checksum;
   if (processing == 0){
@@ -47,7 +47,7 @@ void A_output(message)
     buffer[tail].seqnum = SEQ;
     buffer[tail].acknum = ACK;
     buffer[tail].checksum = checksum;
-    buffer[tail].payload = message;
+    strcpy(buffer[tail].payload, message.data);
     if (tail + 1 < 1000){
       tail = tail + 1;
     }
@@ -57,13 +57,13 @@ void A_output(message)
     tolayer3(0,packet);
     seq = packet.seqnum;
     /*开始timer*/
-    starttimer(0,30f);
+    starttimer(0,30.0f);
   }
   else {
     buffer[tail].seqnum = SEQ;
     buffer[tail].acknum = ACK;
     buffer[tail].checksum = checksum;
-    buffer[tail].payload = message;
+    strcpy(buffer[tail].payload, message.data);
     if (tail + 1 < 1000){
       tail = tail + 1;
     }
@@ -79,22 +79,22 @@ void A_input(packet)
   struct pkt packet;
 { 
   struct msg message;
-  seqnum = packet -> seqnum;
-  acknum = packet -> acknum;
-  message = packet -> payload;
-  checksum = packet -> checksum;
+  int seqnum = packet. seqnum;
+  int acknum = packet. acknum;
+  strcpy(packet.payload, message.data);
+  int checksum = packet.checksum;
   /*calculate the checksum*/
   int sum = 0;
   sum = sum + seqnum + acknum;
   for (int i = 0; i < 20; i++){
-    sum = sum + message[i];
+    sum = sum + message.data[i];
   }
   if (seqnum == seq && sum == checksum && acknum == 1){
     stoptimer(0);
     if (head + 1 < 1000){
-      if (buffer[head + 1].seq != -1){
+      if (buffer[head + 1].seqnum != -1){
 	tolayer3(1, buffer[head + 1]);
-	starttimer(0,30f);
+	starttimer(0,30.0f);
 	seq = buffer[head + 1].seqnum;
       }
       else {
@@ -103,9 +103,9 @@ void A_input(packet)
       head = head + 1;
     }
     else {
-      if (buffer[0].seq != -1){
+      if (buffer[0].seqnum != -1){
 	tolayer3(1, buffer[0]);
-	starttimer(0,30f);
+	starttimer(0,30.0f);
 	seq = buffer[0].seqnum;
       }
       else {
@@ -117,7 +117,7 @@ void A_input(packet)
   if (seqnum == seq && sum == checksum && acknum == 0){
     stoptimer(0);
     tolayer3(1, buffer[head]);
-    starttimer(0,30f);
+    starttimer(0,30.0f);
   }
 }
 /* called when A's timer goes off */
@@ -125,7 +125,7 @@ void A_timerinterrupt()
 {
     stoptimer(0);
     tolayer3(1, buffer[head]);
-    starttimer(0,30f);
+    starttimer(0,30.0f);
 }  
 
 /* the following routine will be called once (only) before any other */
@@ -139,7 +139,7 @@ void A_init()
   head = 0;
   tail =0;
   for (int i = 0; i < 1000; i++){
-    buffer[i].seq = -1;
+    buffer[i].seqnum = -1;
   }
 }
 
@@ -149,15 +149,16 @@ void A_init()
 void B_input(packet)
   struct pkt packet;
 {
-  seqnum = packet.seqnum;
-  acknum = packet.acknum;
-  message = packet.payload;
-  checksum = packet.checksum;
+  struct msg message;
+  int seqnum = packet.seqnum;
+  int acknum = packet.acknum;
+  strcpy(packet.payload, message.data);
+  int checksum = packet.checksum;
   if (seqnum == seq){
     int sum = 0;
     sum = sum + seqnum + acknum;
     for (int i = 0; i < 20; i++){
-      sum = sum + message[i];
+      sum = sum + message.data[i];
     }
     /*Check whether checksum is the sum of above three number*/
     /*If sum and checksum are same send ACK to A, if not send NAK to A*/
@@ -168,11 +169,11 @@ void B_input(packet)
       struct pkt NAKpacket;
       NAKpacket.seqnum = seqnum;
       NAKpacket.acknum = NAK;
-      NAKpacket.payload = message;
+      strcpy(NAKpacket.payload, message.data);
       int nak_checksum = 0;
       nak_checksum = nak_checksum + seqnum + NAK;
       for (int i = 0; i < 20; i++){
-	nak_checksum = nak_checksum + message[i];
+	nak_checksum = nak_checksum + message.data[i];
       }
       NAKpacket.checksum = nak_checksum;
       tolayer3(1,NAKpacket);
