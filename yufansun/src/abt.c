@@ -93,7 +93,7 @@ void A_input(packet)
     stoptimer(0);
     if (head + 1 < 1000){
       if (buffer[head + 1].seqnum != -1){
-	tolayer3(1, buffer[head + 1]);
+	tolayer3(0, buffer[head + 1]);
 	starttimer(0,30.0f);
 	seq = buffer[head + 1].seqnum;
       }
@@ -104,7 +104,7 @@ void A_input(packet)
     }
     else {
       if (buffer[0].seqnum != -1){
-	tolayer3(1, buffer[0]);
+	tolayer3(0, buffer[0]);
 	starttimer(0,30.0f);
 	seq = buffer[0].seqnum;
       }
@@ -116,7 +116,7 @@ void A_input(packet)
   }
   if (seqnum == seq && sum == checksum && acknum == 0){
     stoptimer(0);
-    tolayer3(1, buffer[head]);
+    tolayer3(0, buffer[head]);
     starttimer(0,30.0f);
   }
 }
@@ -124,7 +124,7 @@ void A_input(packet)
 void A_timerinterrupt()
 {
     stoptimer(0);
-    tolayer3(1, buffer[head]);
+    tolayer3(0, buffer[head]);
     starttimer(0,30.0f);
 }  
 
