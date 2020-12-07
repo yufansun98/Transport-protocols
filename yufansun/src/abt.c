@@ -79,9 +79,9 @@ void A_input(packet)
   struct pkt packet;
 { 
   struct msg message;
-  int seqnum = packet. seqnum;
-  int acknum = packet. acknum;
-  strcpy(packet.payload, message.data);
+  int seqnum = packet.seqnum;
+  int acknum = packet.acknum;
+  strcpy(message.data, packet.payload);
   int checksum = packet.checksum;
   /*calculate the checksum*/
   int sum = 0;
@@ -152,7 +152,7 @@ void B_input(packet)
   struct msg message;
   int seqnum = packet.seqnum;
   int acknum = packet.acknum;
-  strcpy(packet.payload, message.data);
+  strcpy(message.data, packet.payload);
   int checksum = packet.checksum;
   if (seqnum == seq){
     int sum = 0;
@@ -164,6 +164,7 @@ void B_input(packet)
     /*If sum and checksum are same send ACK to A, if not send NAK to A*/
     if (sum == checksum){
       tolayer3(1,packet);
+      tolayer5(1,message.data);
     }
     else {
       struct pkt NAKpacket;
