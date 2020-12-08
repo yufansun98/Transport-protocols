@@ -111,6 +111,7 @@ void A_input(packet)
   if (seqnum == seq && sum == checksum && acknum == 0){
     stoptimer(0);
     tolayer3(0, buffer[head]);
+    seq = buffer[head].seqnum;
     starttimer(0,20.0f);
     printf("recive NAK from B and resend this packet to B\n");
   }
@@ -119,6 +120,7 @@ void A_input(packet)
 void A_timerinterrupt()
 {
     tolayer3(0, buffer[head]);
+    seq = buffer[head].seqnum;
     starttimer(0,20.0f);
     printf("timeout! resend packet to B\n");
 }  
