@@ -115,7 +115,6 @@ void A_input(packet)
 /* called when A's timer goes off */
 void A_timerinterrupt()
 {
-    stoptimer(0);
     tolayer3(0, buffer[head]);
     starttimer(0,30.0f);
 }  
