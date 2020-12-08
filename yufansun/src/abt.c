@@ -147,19 +147,18 @@ void B_input(packet)
   struct msg message;
   int seqnum = packet.seqnum;
   int acknum = packet.acknum;
-  strcpy(message.data, packet.payload);
   int checksum = packet.checksum;
   if (seqnum == seqB){
     int sum = 0;
     sum = sum + seqnum + acknum;
     for (int i = 0; i < 20; i++){
-      sum = sum + message.data[i];
+      sum = sum + packet.payload[i];
     }
     /*Check whether checksum is the sum of above three number*/
     /*If sum and checksum are same send ACK to A, if not send NAK to A*/
     if (sum == checksum){
       tolayer3(1,packet);
-      tolayer5(1,message.data);
+      tolayer5(1,packet.payload);
       seqB = (seqB + 1) % 2;
       printf("succsee recive packet from A and send to layer5\n");
     }
@@ -167,11 +166,11 @@ void B_input(packet)
       struct pkt NAKpacket;
       NAKpacket.seqnum = seqnum;
       NAKpacket.acknum = NAK;
-      strcpy(NAKpacket.payload, message.data);
+      strcpy(NAKpacket.payload, packet.payload);
       int nak_checksum = 0;
       nak_checksum = nak_checksum + seqnum + NAK;
       for (int i = 0; i < 20; i++){
-	nak_checksum = nak_checksum + message.data[i];
+	nak_checksum = nak_checksum + packet.payload[i];
       }
       NAKpacket.checksum = nak_checksum;
       tolayer3(1,NAKpacket);
