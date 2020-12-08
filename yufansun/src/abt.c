@@ -19,13 +19,13 @@
 #define NAK 0;
 /*buffer的运用：array of pkt， 然后一个数字记录头的位置，一个数字记录尾巴的位置，每次call A_output时尾巴移一位，每次确认到头的ACK时就移一位头的位置*/
 
-int seq = 0; /*正在传输的packet的seqnum*/
-int SEQ = 0; /*会随着buffer的增加一直在走的seqnum*/
-int seqB = 0;
+int seq; /*正在传输的packet的seqnum*/
+int SEQ; /*会随着buffer的增加一直在走的seqnum*/
+int seqB;
 struct pkt buffer[1000];
-int processing = 0; /*1 neans there is a measage sending and reciving, 0 means no meassage are processing*/
-int head = 0;
-int tail = 0;
+int processing; /*1 neans there is a measage sending and reciving, 0 means no meassage are processing*/
+int head;
+int tail;
 
 /* called from layer 5, passed the data to be sent to other side */
 void A_output(message)
@@ -132,7 +132,7 @@ void A_init()
   SEQ = 0;
   processing = 0;
   head = 0;
-  tail =0;
+  tail = 0;
   for (int i = 0; i < 1000; i++){
     buffer[i].seqnum = -1;
   }
