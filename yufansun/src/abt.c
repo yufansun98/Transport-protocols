@@ -84,6 +84,7 @@ void A_output(message)
   SEQ = (SEQ + 1) % 2;
 }
 
+
 /* called from layer 3, when a packet arrives for layer 4 */
 void A_input(packet)
   struct pkt packet;
