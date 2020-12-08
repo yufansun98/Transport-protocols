@@ -33,13 +33,16 @@ void A_output(message)
 {
   /*everytime send packet to B we set acknum to 1 so that each time if they check correct they can direct sand back this packet*/
   struct pkt packet;
-  strcpy(packet.payload, message.data);
+  //strcpy(packet.payload, message.data);
+  for (int a = 0; a < 20; a++){
+    packet.payload[a] = message.data[a];
+  }
   packet.seqnum = SEQ;
   packet.acknum = ACK;
   int checksum = 0;
-  checksum = checksum + ACK + SEQ;
+  checksum = checksum + packet.acknum + packet.seqnum;
   for (int i = 0; i < 20; i++){
-    checksum = checksum + message.data[i];
+    checksum = checksum + packet.payload[i];
   }
   packet.checksum = checksum;
   if (processing == 0){
