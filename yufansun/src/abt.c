@@ -55,7 +55,7 @@ void A_output(message)
       tail = 0;
     }
     tolayer3(0,packet);
-    printf("success send packet to B");
+    printf("success send packet to B\n");
     seq = packet.seqnum;
     /*开始timer*/
     starttimer(0,30.0f);
@@ -102,7 +102,7 @@ void A_input(packet)
       tolayer3(0, buffer[head]);
       starttimer(0,30.0f);
       seq = buffer[head].seqnum;
-      printf("recive ACK from B and send next packet in buffer to B");
+      printf("recive ACK from B and send next packet in buffer to B\n");
     }
     else {
       processing = 0;
@@ -112,7 +112,7 @@ void A_input(packet)
     stoptimer(0);
     tolayer3(0, buffer[head]);
     starttimer(0,30.0f);
-    printf("recive NAK from B and resend this packet to B");
+    printf("recive NAK from B and resend this packet to B\n");
   }
 }
 /* called when A's timer goes off */
@@ -120,7 +120,7 @@ void A_timerinterrupt()
 {
     tolayer3(0, buffer[head]);
     starttimer(0,30.0f);
-    printf("timeout! resend packet to B");
+    printf("timeout! resend packet to B\n");
 }  
 
 /* the following routine will be called once (only) before any other */
@@ -160,7 +160,7 @@ void B_input(packet)
     if (sum == checksum){
       tolayer3(1,packet);
       tolayer5(1,message.data);
-      printf("succsee recive packet from A and send to layer5");
+      printf("succsee recive packet from A and send to layer5\n");
     }
     else {
       struct pkt NAKpacket;
@@ -174,13 +174,13 @@ void B_input(packet)
       }
       NAKpacket.checksum = nak_checksum;
       tolayer3(1,NAKpacket);
-      printf("recive the packet from A but the check sum is wrong, so sendback a NAK packet");
+      printf("recive the packet from A but the check sum is wrong, so sendback a NAK packet\n");
     }
   }
   /* when waiting for seq 1 but recive seq 0*/
   else{
     tolayer3(1,packet);
-    printf("recive packet from A, but the wrong seq number, sendback this packet to A");
+    printf("recive packet from A, but the wrong seq number, sendback this packet to A\n");
   }
 }
 
