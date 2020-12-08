@@ -92,26 +92,18 @@ void A_input(packet)
   if (seqnum == seq && sum == checksum && acknum == 1){
     stoptimer(0);
     if (head + 1 < 1000){
-      if (buffer[head + 1].seqnum != -1){
-	tolayer3(0, buffer[head + 1]);
-	starttimer(0,30.0f);
-	seq = buffer[head + 1].seqnum;
-      }
-      else {
-	processing = 0;
-      }
       head = head + 1;
     }
     else {
-      if (buffer[0].seqnum != -1){
-	tolayer3(0, buffer[0]);
-	starttimer(0,30.0f);
-	seq = buffer[0].seqnum;
-      }
-      else {
-	processing = 0;
-      }
       head = 0;
+    }
+    if (buffer[head].seqnum != -1){
+      tolayer3(0, buffer[head]);
+      starttimer(0,30.0f);
+      seq = buffer[head].seqnum;
+    }
+    else {
+      processing = 0;
     }
   }
   if (seqnum == seq && sum == checksum && acknum == 0){
