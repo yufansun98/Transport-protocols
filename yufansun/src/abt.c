@@ -58,7 +58,7 @@ void A_output(message)
     printf("success send packet to B\n");
     seq = packet.seqnum;
     /*开始timer*/
-    starttimer(0,30.0f);
+    starttimer(0,20.0f);
   }
   else {
     buffer[tail].seqnum = SEQ;
@@ -100,7 +100,7 @@ void A_input(packet)
     }
     if (buffer[head].seqnum != -1){
       tolayer3(0, buffer[head]);
-      starttimer(0,30.0f);
+      starttimer(0,20.0f);
       seq = buffer[head].seqnum;
       printf("recive ACK from B and send next packet in buffer to B\n");
     }
@@ -111,7 +111,7 @@ void A_input(packet)
   if (seqnum == seq && sum == checksum && acknum == 0){
     stoptimer(0);
     tolayer3(0, buffer[head]);
-    starttimer(0,30.0f);
+    starttimer(0,20.0f);
     printf("recive NAK from B and resend this packet to B\n");
   }
 }
@@ -119,7 +119,7 @@ void A_input(packet)
 void A_timerinterrupt()
 {
     tolayer3(0, buffer[head]);
-    starttimer(0,30.0f);
+    starttimer(0,20.0f);
     printf("timeout! resend packet to B\n");
 }  
 
