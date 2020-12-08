@@ -47,7 +47,10 @@ void A_output(message)
     buffer[tail].seqnum = SEQ;
     buffer[tail].acknum = ACK;
     buffer[tail].checksum = checksum;
-    strcpy(buffer[tail].payload, message.data);
+    //strcpy(buffer[tail].payload, message.data);
+    for (int a = 0; a < 20; a++){
+      buffer[tail].payload[a] = message.data[a];
+    }
     if (tail + 1 < 1000){
       tail = tail + 1;
     }
@@ -64,7 +67,10 @@ void A_output(message)
     buffer[tail].seqnum = SEQ;
     buffer[tail].acknum = ACK;
     buffer[tail].checksum = checksum;
-    strcpy(buffer[tail].payload, message.data);
+    //strcpy(buffer[tail].payload, message.data);
+    for (int a = 0; a < 20; a++){
+      buffer[tail].payload[a] = message.data[a];
+    }
     if (tail + 1 < 1000){
       tail = tail + 1;
     }
@@ -82,13 +88,13 @@ void A_input(packet)
   struct msg message;
   int seqnum = packet.seqnum;
   int acknum = packet.acknum;
-  strcpy(message.data, packet.payload);
+  //strcpy(message.data, packet.payload);
   int checksum = packet.checksum;
   /*calculate the checksum*/
   int sum = 0;
   sum = sum + seqnum + acknum;
   for (int i = 0; i < 20; i++){
-    sum = sum + message.data[i];
+    sum = sum + packet.payload[i];
   }
   if (seqnum == seq && sum == checksum && acknum == 1){
     stoptimer(0);
@@ -168,7 +174,10 @@ void B_input(packet)
       struct pkt NAKpacket;
       NAKpacket.seqnum = seqnum;
       NAKpacket.acknum = NAK;
-      strcpy(NAKpacket.payload, packet.payload);
+      //strcpy(NAKpacket.payload, packet.payload);
+      for (int a = 0; a < 20; a++){
+	NAKpacket.payload[a] = packet.payload[a];
+      }
       int nak_checksum = 0;
       nak_checksum = nak_checksum + seqnum + NAK;
       for (int i = 0; i < 20; i++){
