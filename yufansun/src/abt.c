@@ -149,7 +149,7 @@ void B_input(packet)
   int acknum = packet.acknum;
   strcpy(message.data, packet.payload);
   int checksum = packet.checksum;
-  if (seqnum == seq){
+  if (seqnum == seqB){
     int sum = 0;
     sum = sum + seqnum + acknum;
     for (int i = 0; i < 20; i++){
@@ -160,6 +160,7 @@ void B_input(packet)
     if (sum == checksum){
       tolayer3(1,packet);
       tolayer5(1,message.data);
+      seqB = (seqB + 1) % 2;
       printf("succsee recive packet from A and send to layer5\n");
     }
     else {
