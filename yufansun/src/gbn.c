@@ -80,7 +80,7 @@ void A_output(message)
       tail = 0;
     }
     if (base == nextseqnum){
-      starttimer(0, 20.0f);
+      starttimer(0, 200.0f);
     }
     nextseqnum++;
     //N++;
@@ -109,7 +109,7 @@ void A_input(packet)
       stoptimer(0);
     }
     else {
-      starttimer(0, 20.0f);
+      starttimer(0, 200.0f);
       for (int i = nextseqnum; i < base + winsize; i++){
 	if (buffer[i].seqnum != -1){
 	  tolayer3(0, buffer[i]);
@@ -125,7 +125,7 @@ void A_input(packet)
 /* called when A's timer goes off */
 void A_timerinterrupt()
 {
-  starttimer(0, 20.0f);
+  starttimer(0, 200.0f);
   for (int i = base; i < nextseqnum; i = (i + 1) % 1000){
     tolayer3(0, buffer[i]);
   }
