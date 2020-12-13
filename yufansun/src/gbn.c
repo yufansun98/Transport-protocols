@@ -173,5 +173,6 @@ void B_input(packet)
 /* entity B routines are called. You can use it to do any initialization */
 void B_init()
 {
+  
   exseqnum = 0;
 }
