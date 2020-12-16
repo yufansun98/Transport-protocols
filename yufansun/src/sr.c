@@ -76,6 +76,7 @@ void A_output(message)
     if (nextseqnum < base + winsize){ //when windows size not full, add to window and send packet to B
     buffer[tail] = makepacket(message, seq, seq);
     tolayer3(0, buffer[tail]);
+    printf("Aside: the packet in window and already send to B\n");
     if (tail % 1000 != 0){
       tail = tail + 1;
     }
@@ -120,6 +121,7 @@ void A_input(packet)
 {
   if (check_checksum(packet) == 1 && packet.seqnum >= base && packet.seqnum < base + winsize){
     buffer[packet.acknum].acknum = -1;
+    printf("Aside: recive ACK from B and mark this seq is all set\n");
     if (packet.seqnum == base){ //当收到packet为窗口的第一位时
       if (packet.seqnum == list -> seqnum){ //当收到的packet为在timer list里第一个也就是正常开启的计时器时
 	stoptimer(0);
@@ -143,6 +145,7 @@ void A_input(packet)
       int count = 0;
       for (int a = nextseqnum; a < base + winsize; a++){ //发送新窗口中为发送的分组
 	tolayer3(0, buffer[a]);
+	printf("Aside: already move window and send message from new window which haven't send yet\n");
 	if (list -> tail == NULL){
 	  list = (struct Node*)malloc(sizeof(struct Node));
 	  list -> seqnum = 0;
@@ -170,6 +173,7 @@ void A_timerinterrupt()
   for (int i = base; i < base + winsize; i++){
     if (buffer[i].acknum != -1){
       tolayer3(0, buffer[i]);
+      printf("Aside: resend packet to B\n");
       if (list -> tail == NULL){
 	list = (struct Node*)malloc(sizeof(struct Node));
 	list -> seqnum = 0;
@@ -224,10 +228,12 @@ void B_input(packet)
     }
     Bbuffer[packet.seqnum] = makepacket(message, packet.seqnum, packet.seqnum);
     tolayer3(1, packet);
+    printf("Bside: check everything good and send back ACKpacket to A\n");
     if (packet.seqnum == exseqnum){
       for (int i = exseqnum; i < exseqnum + N; i++){
 	if (Bbuffer[i % 1000].seqnum != -1){
 	  tolayer5(1, Bbuffer[i % 1000].payload);
+	  printf("Bside: everything check right and send message to layer5\n");
 	  exseqnum++;
 	}
 	else {
@@ -238,6 +244,7 @@ void B_input(packet)
   }
   if (check_checksum(packet) == 1 && packet.seqnum >= exseqnum - N && packet.seqnum < exseqnum){
     tolayer3(1, packet);
+    printf("Bside: The message is in previous window and send back to A\n");
   }
 }
 
