@@ -1,5 +1,6 @@
 #include "../include/simulator.h"
 #include <stddef.h>
+#include <stdio.h>
 
 /* ******************************************************************
  ALTERNATING BIT AND GO-BACK-N NETWORK EMULATOR: VERSION 1.1  J.F.Kurose
@@ -36,8 +37,7 @@ struct Node {
 };
 float t = 30.0f;
 
-struct Node* list = NULL;
-
+struct Node* list;
 
 int check_checksum(struct pkt packet){
   int sum = 0;
@@ -213,6 +213,7 @@ void A_init()
   head = 0;
   tail = 0;
   winsize = getwinsize();
+  list = (struct Node*)malloc(sizeof(struct Node));
 }
 
 /* Note that with simplex transfer from a-to-B, there is no B_output() */
