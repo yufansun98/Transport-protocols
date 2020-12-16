@@ -144,8 +144,10 @@ void A_input(packet)
       }
       int count = 0;
       for (int a = nextseqnum; a < base + winsize; a++){ //发送新窗口中为发送的分组
-	tolayer3(0, buffer[a]);
-	printf("Aside: already move window and send message from new window which haven't send yet\n");
+	if (buffer[a].seqnum != -1){
+	  tolayer3(0, buffer[a]);
+	  printf("Aside: already move window and send message from new window which haven't send yet\n");
+	}
 	if (list -> tail == NULL){
 	  list = (struct Node*)malloc(sizeof(struct Node));
 	  list -> seqnum = 0;
@@ -243,10 +245,10 @@ void B_input(packet)
       }
     }
   }
-  if (check_checksum(packet) == 1 && packet.seqnum >= exseqnum - N && packet.seqnum < exseqnum){
-    tolayer3(1, packet);
-    printf("Bside: The message is in previous window and send back to A\n");
-  }
+  //  if (check_checksum(packet) == 1 && packet.seqnum >= exseqnum - N && packet.seqnum < exseqnum){
+  // tolayer3(1, packet);
+  // printf("Bside: The message is in previous window and send back to A\n");
+  // }
 }
 
 /* the following rouytine will be called once (only) before any other */
