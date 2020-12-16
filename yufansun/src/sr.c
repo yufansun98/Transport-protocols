@@ -128,6 +128,7 @@ void A_input(packet)
 	for (struct Node* l = list; l -> next != NULL; l = l -> next){
 	  if (buffer[l -> next -> seqnum].acknum != -1){
 	    starttimer(0, list -> next -> end - get_sim_time());
+	    list -> next -> tail = list -> tail;
 	    list = list -> next;
 	    break;
 	  }
@@ -193,6 +194,7 @@ void A_timerinterrupt()
       for (struct Node* l = list; l -> next != NULL; l = l -> next){
 	if (buffer[l -> next -> seqnum].acknum != -1){
 	  starttimer(0, list -> next -> end - get_sim_time());
+	  list -> next -> tail = list -> tail;
 	  list = list -> next;
 	  break;
 	}
